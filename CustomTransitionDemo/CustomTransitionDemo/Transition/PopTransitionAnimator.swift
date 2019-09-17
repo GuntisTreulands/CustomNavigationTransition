@@ -39,11 +39,10 @@ class PopTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
     	context = transitionContext
     
-        guard let fromView = transitionContext.view(forKey: .from) else { return }
-        guard let toView = transitionContext.view(forKey: .to) else { return }
-		
-		guard let toViewController = transitionContext.viewController(forKey: .to) as? PopTransitionAnimatorFinaliseHelperProtocol else { return }
-		guard let fromViewController = transitionContext.viewController(forKey: .from) as? PopTransitionAnimatorHelperProtocol else { return }
+        guard let fromView = transitionContext.view(forKey: .from),
+			  let toView = transitionContext.view(forKey: .to),
+			  let toViewController = transitionContext.viewController(forKey: .to) as? PopTransitionAnimatorFinaliseHelperProtocol,
+			  let fromViewController = transitionContext.viewController(forKey: .from) as? PopTransitionAnimatorHelperProtocol else { return }
 
         self.fromViewController = fromViewController
 

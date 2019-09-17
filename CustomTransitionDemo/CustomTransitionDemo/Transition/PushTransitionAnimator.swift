@@ -24,10 +24,9 @@ class PushTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
     	context = transitionContext
 
-        guard let fromView = transitionContext.view(forKey: .from) else { return }
-        guard let toView = transitionContext.view(forKey: .to) else { return }
-
-		guard let toViewController = transitionContext.viewController(forKey: .to) as? PushTransitionAnimatorHelperProtocol else { return }
+        guard let fromView = transitionContext.view(forKey: .from),
+			  let toView = transitionContext.view(forKey: .to),
+        	  let toViewController = transitionContext.viewController(forKey: .to) as? PushTransitionAnimatorHelperProtocol  else { return }
 
 		// Get the duration, that was declared in transitionDuration()
  		let duration = transitionDuration(using: transitionContext)
