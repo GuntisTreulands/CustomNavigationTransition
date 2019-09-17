@@ -24,9 +24,7 @@ protocol PopTransitionAnimatorFinaliseHelperProtocol: class {
 class PopTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
 	weak var context: UIViewControllerContextTransitioning?
-
-	weak var fromViewController: PopTransitionAnimatorHelperProtocol? 
-	weak var toViewController: PopTransitionAnimatorFinaliseHelperProtocol? 
+	weak var fromViewController: PopTransitionAnimatorHelperProtocol?
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.6
@@ -44,27 +42,26 @@ class PopTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         guard let fromView = transitionContext.view(forKey: .from) else { return }
         guard let toView = transitionContext.view(forKey: .to) else { return }
 		
-		guard let toViewController = transitionContext.viewController(forKey: .to) else { return }
-		guard let fromViewController = transitionContext.viewController(forKey: .from) else { return }
+		guard let toViewController = transitionContext.viewController(forKey: .to) as? PopTransitionAnimatorFinaliseHelperProtocol else { return }
+		guard let fromViewController = transitionContext.viewController(forKey: .from) as? PopTransitionAnimatorHelperProtocol else { return }
 
-        self.fromViewController = fromViewController as? PopTransitionAnimatorHelperProtocol
-        self.toViewController = toViewController as? PopTransitionAnimatorFinaliseHelperProtocol
-        
+        self.fromViewController = fromViewController
+
         let duration = transitionDuration(using: transitionContext)
-
 
         let container = transitionContext.containerView
         container.insertSubview(toView, belowSubview: fromView)
 		toView.alpha = 0
 
 		// This is just a tiny extra animation, to un-hide view that will appear - to appear faster.
-		UIView.animate(withDuration: duration/2, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.2, options: [.curveEaseInOut], animations: {
+		UIView.animate(withDuration: duration/2, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.2,
+			options: [.curveEaseInOut], animations: {
 			toView.alpha = 1
 		})
 
-		self.fromViewController?.hide(withDuration: duration) { status in
+		fromViewController.hide(withDuration: duration) { status in
 			if !transitionContext.transitionWasCancelled {
-				self.toViewController?.customTransitionWasFinished()
+				toViewController.customTransitionWasFinished()
 				container.addSubview(toView)
 			}
 			transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
